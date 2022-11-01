@@ -1,0 +1,67 @@
+<html lang="" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>DWM PRACS</title>
+</head>
+
+<body>
+
+    <pre>
+        import pandas as pd
+        import numpy as np
+        df = pd.read_csv('IRIS.csv')
+        df.head()
+        df = df['sepal_length']
+        ndf = np.array(df)
+        print(type(ndf))
+        print(ndf)
+        cluster_points = int(input())
+        clusters = np.random.uniform(np.min(ndf), np.max(ndf) , cluster_points)
+
+        print(clusters)
+
+        k = 0
+        count = 0
+        ch=0
+        print(len(ndf))
+        # data=[]
+        data = pd.DataFrame()
+        new_points= [[]]*cluster_points
+        data['sepal_length'] = df
+        while(True):
+
+            distance = np.abs(np.vstack([ndf] * cluster_points).T - clusters)
+            mind = np.argmin(distance , -1)
+
+            data["cluster"]=mind
+            newpoints = clusters.copy()
+            ch+=1
+            for i in range(cluster_points):
+                subset = data[data['cluster'] == i]
+                # print('here',subset)
+                new_points[i] = np.mean(subset['sepal_length'])
+                print('the new point at i is ',new_points[i])
+            for i in range(cluster_points):
+                print('for cluster',i , 'the diff is ',np.abs(new_points[i] - clusters[i]))
+                if np.abs(new_points[i] - clusters[i]) < .0003 and ch>1:
+                    count+=1
+            if count == cluster_points:
+                break
+            else:
+                count=0
+            print('old clusters',clusters, ' new points', new_points)
+
+            clusters = new_points
+            new_points = [[]]*cluster_points
+
+
+        print(ch)
+        print(clusters)
+        for i in range(cluster_points):
+            print("Cluster Allocation for {}".format(i))
+            print(data[data["cluster"] == i])
+    </pre>
+
+</body>
+</html>
